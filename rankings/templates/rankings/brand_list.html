@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page_title|default:"브랜드 ESG/TNFD 랭킹" }}</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* 좀 더 현대적인 폰트 */
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7f6; /* 부드러운 배경색 */
+            color: #333;
+        }
+        .container {
+            width: 80%; /* 콘텐츠 너비 */
+            margin: 40px auto; /* 상하 마진 및 가운데 정렬 */
+            background-color: #fff;
+            padding: 30px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1); /* 부드러운 그림자 효과 */
+            border-radius: 8px; /* 모서리 둥글게 */
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50; /* 제목 색상 */
+            margin-bottom: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border-bottom: 1px solid #e0e0e0; /* 아래쪽 테두리만 사용 */
+            padding: 12px 15px; /* 패딩 증가 */
+            text-align: left;
+            vertical-align: middle; /* 세로 가운데 정렬 */
+        }
+        th {
+            background-color: #3498db; /* 헤더 배경색 (예시) */
+            color: white; /* 헤더 글자색 */
+            font-weight: 600; /* 헤더 글자 굵기 */
+        }
+        tr:nth-child(even) { /* 짝수 행 배경색 (가독성 향상) */
+            background-color: #f9f9f9;
+        }
+        tr:hover { /* 마우스 오버 시 배경색 변경 */
+            background-color: #f1f1f1;
+        }
+        .logo-img {
+            max-width: 40px; /* 로고 크기 약간 줄임 */
+            max-height: 40px;
+            border-radius: 4px; /* 로고 이미지 모서리 살짝 둥글게 */
+        }
+        .rank-badge {
+            font-weight: bold;
+            font-size: 1.1em;
+            text-align: center; /* 순위 가운데 정렬 */
+            width: 8%; /* 순위 컬럼 너비 고정 (예시) */
+        }
+        .brand-name {
+            font-weight: 500;
+        }
+        .last-activity-text {
+            font-size: 0.9em;
+            color: #555;
+        }
+        .footer-admin-link {
+            text-align: right;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            font-size: 0.9em;
+        }
+        .footer-admin-link a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        .footer-admin-link a:hover {
+            text-decoration: underline;
+        }
+        .no-data { /* 데이터 없을 때 메시지 스타일 */
+            text-align: center;
+            padding: 50px;
+            font-size: 1.2em;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>{{ page_title|default:"브랜드 ESG/TNFD 랭킹" }}</h1>
+
+        {% if brands %}
+            <table>
+                <thead>
+                    <tr>
+                        <th class="rank-badge">순위</th>
+                        <th>로고</th>
+                        <th>브랜드명</th>
+                        <th>최근 활동/이슈</th>
+                        {# 사용자 화면에서는 보통 종합 점수를 직접 보여주기보다 순위로 나타냅니다. #}
+                        {# 필요하다면 여기에 '종합 점수' 컬럼을 추가할 수 있습니다. #}
+                        {# <th>종합 점수</th> #}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for brand in brands %}
+                        <tr>
+                            <td class="rank-badge">{{ brand.current_rank }}</td>
+                            <td>
+                                {% if brand.logo %}
+                                    <img src="{{ brand.logo.url }}" alt="{{ brand.name }} 로고" class="logo-img">
+                                {% else %}
+                                    <span style="font-size:0.8em; color:#999;">로고 없음</span>
+                                {% endif %}
+                            </td>
+                            <td class="brand-name">{{ brand.name }}</td>
+                            <td class="last-activity-text">{{ brand.last_activity|truncatewords_html:20|default:"-" }}</td> {# truncatewords_html로 변경, 20단어로 늘림 #}
+                            {# <td>{{ brand.total_score|floatformat:2|default:"-" }}</td> #}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="no-data">아직 랭킹 정보가 준비되지 않았습니다.</p>
+        {% endif %}
+
+        <div class="footer-admin-link">
+            <a href="{% url 'admin:index' %}">관리자 페이지로 이동</a>
+        </div>
+    </div>
+</body>
+</html>
