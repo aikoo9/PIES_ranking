@@ -31,6 +31,12 @@ if PYTHONANYWHERE_USERNAME_FROM_ENV and PYTHONANYWHERE_USERNAME_FROM_ENV != '아
 if DEBUG: # DEBUG가 True일 때만 로컬 호스트 추가
     ALLOWED_HOSTS.extend(['127.0.0.1', 'localhost'])
 
+# CSRF 보호를 위해 신뢰할 수 있는 출처 설정
+# HTTPS를 사용하므로 'https://'를 포함해야 합니다.
+CSRF_TRUSTED_ORIGINS = ['https://icuu.pythonanywhere.com']
+
+# 만약 www 서브도메인도 사용한다면 (지금은 해당 없음)
+# CSRF_TRUSTED_ORIGINS = ['https://icuu.pythonanywhere.com', 'https://www.icuu.pythonanywhere.com']
 
 # Application definition
 INSTALLED_APPS = [
